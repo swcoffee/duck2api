@@ -11,14 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
 )
 
 var (
-	Token *XqdgToken
-	UA    = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+	Token   *XqdgToken
+	UA      = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 	Gateway string
 )
 
@@ -69,7 +70,7 @@ func postStatus(client httpclient.AuroraHttpClient, proxyUrl string) (*http.Resp
 	header := createHeader()
 	header.Set("accept", "*/*")
 	header.Set("x-vqd-accept", "1")
-	response, err := client.Request(httpclient.GET, Gateway + "/duckchat/v1/status", header, nil, nil)
+	response, err := client.Request(httpclient.GET, Gateway+"/duckchat/v1/status", header, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +88,7 @@ func POSTconversation(client httpclient.AuroraHttpClient, request duckgotypes.Ap
 	header := createHeader()
 	header.Set("accept", "text/event-stream")
 	header.Set("x-vqd-4", token)
-	response, err := client.Request(httpclient.POST, Gateway + "/duckchat/v1/chat", header, nil, bytes.NewBuffer(body_json))
+	response, err := client.Request(httpclient.POST, Gateway+"/duckchat/v1/chat", header, nil, bytes.NewBuffer(body_json))
 	if err != nil {
 		return nil, err
 	}
