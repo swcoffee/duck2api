@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/url"
 	"os"
+	"strings"
 )
 
 func checkProxy() *proxys.IProxy {
