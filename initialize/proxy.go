@@ -12,7 +12,24 @@ func checkProxy() *proxys.IProxy {
 	var proxies []string
 	proxyUrl := os.Getenv("PROXY_URL")
 	if proxyUrl != "" {
-		proxies = append(proxies, proxyUrl)
+		// 支持多代理，使用逗号分隔
+		proxyList := strings.Split(proxyUrl, ",")
+		for _, proxy := range proxyList {
+			proxy = strings.TrimSpace(proxy)
+			if proxy != "" {
+				// 验证代理URL格式
+				parsedURL, err := url.Parse(proxy)
+				if err != nil {
+					slog.Warn("proxy url is invalid", "url", proxy, "err", err)
+					continue
+				}
+				
+				// 检查是否包含端口信息
+				if parsedURL.Port() != "" {
+					proxies = append(proxies, proxy)
+				}
+			}
+		}
 	}
 
 	if _, err := os.Stat("proxies.txt"); err == nil {
